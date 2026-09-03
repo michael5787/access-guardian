@@ -38,7 +38,7 @@ export const attachSpaceAuth = createMiddleware({ type: "function" }).client(asy
       ...(current ? [current] : []),
       "admin",
       ...(Object.keys(SPACES) as SpaceKey[]),
-    ].filter((s, i, arr) => arr.indexOf(s) === i);
+    ].filter((s: SpaceKey, i: number, arr: SpaceKey[]) => arr.indexOf(s) === i);
 
     for (const space of order) {
       const { data } = await getSpaceClient(space).auth.getSession();
