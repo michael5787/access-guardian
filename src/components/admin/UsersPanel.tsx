@@ -426,6 +426,36 @@ function UserEditor({
           <p className="mt-2 text-xs text-muted-foreground">6 أحرف على الأقل.</p>
         )}
       </fieldset>
+      <fieldset className="sm:col-span-3 rounded-2xl border border-border p-4">
+        <legend className="px-1 text-xs font-semibold text-muted-foreground">
+          تغيير البريد الإلكتروني لهذا المستخدم
+        </legend>
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            type="email"
+            dir="ltr"
+            className="field-input min-w-[16rem] flex-1"
+            value={newEmail}
+            onChange={(e) => {
+              setNewEmail(e.target.value);
+              setEmailMsg(null);
+            }}
+          />
+          <button
+            type="button"
+            className="btn-text"
+            disabled={emailBusy || newEmail.trim() === "" || newEmail.trim() === row.email}
+            onClick={() => void updateEmail()}
+          >
+            {emailBusy ? "جارٍ التحديث…" : "تحديث البريد"}
+          </button>
+        </div>
+        {emailMsg ? (
+          <p className={`mt-2 text-xs ${emailMsg.ok ? "text-muted-foreground" : "text-destructive"}`}>
+            {emailMsg.text}
+          </p>
+        ) : null}
+      </fieldset>
 
       <div className="flex gap-2">
         <button type="submit" className="btn-primary" disabled={busy}>
