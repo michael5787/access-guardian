@@ -5,6 +5,7 @@ import { consumeAuthRedirect, getSpaceClient, SPACES, SPACE_LABEL, STATUS_LABEL,
 import { MainNav } from "@/components/MainNav";
 import { PasswordField } from "@/components/PasswordField";
 import { PublicBackdrop } from "@/components/PublicBackdrop";
+import { confirmApprovedUserEmail } from "@/lib/admin-users.functions";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 
