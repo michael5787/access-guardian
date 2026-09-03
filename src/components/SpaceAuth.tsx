@@ -103,7 +103,19 @@ export function SpaceAuth({ space, children }: Props) {
       if (err) setError(translateError(err.message));
       else setMessage("تم إنشاء الحساب. في انتظار مصادقة المشرف العام لتفعيله.");
     } else {
-      const { error: err } = await client.auth.signInWithPassword({ email, password });
+      let { error: err } = await client.auth.signInWithPassword({ email, password });
+      if (err && /Email not confirmed/i.test(err.message)) {
+        // The admin already validated this account: confirm the address
+        // server-side (approved profiles only) and retry the sign-in.
+        try {
+          const res = await confirmApprovedUserEmail({ data: { email } });
+          if (res.confirmed) {
+            ({ error: err } = await client.auth.signInWithPassword({ email, password }));
+          }
+        } catch {
+          /* keep the original error */
+        }
+      }
       if (err) setError(translateError(err.message));
     }
     setBusy(false);
