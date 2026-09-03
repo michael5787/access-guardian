@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { SPACE_LABEL, STATUS_LABEL, type SpaceKey } from "@/lib/spaces";
-import { setUserPassword, setUserEmail } from "@/lib/admin-users.functions";
+import { setUserPassword, setUserEmail, confirmApprovedUserEmail } from "@/lib/admin-users.functions";
 import { PasswordField } from "@/components/PasswordField";
 
 type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
@@ -77,6 +77,15 @@ export function UsersPanel({ client }: { client: SupabaseClient<Database> }) {
           .from("teacher_classes")
           .insert(toAdd.map((class_id) => ({ teacher_id: editing.id, class_id })));
         syncErr = e ?? syncErr;
+      }
+    }
+    if (!err && patch.status === "approved") {
+      // Approving an account must also make it usable: clear any pending
+      // email-confirmation gate so the user can sign in right away.
+      try {
+        await confirmApprovedUserEmail({ data: { email: editing.email } });
+      } catch {
+        /* non blocking */
       }
     }
     if (err || syncErr) setError("تعذّر حفظ المستخدم.");
