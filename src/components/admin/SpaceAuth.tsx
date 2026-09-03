@@ -98,7 +98,17 @@ export function SpaceAuth({ space, children }: Props) {
             "تم إنشاء الحساب. سيتم تأكيده قريباً بعد مصادقة المشرف."
         );
     } else {
-      const { error: err } = await client.auth.signInWithPassword({ email, password });
+      let { error: err } = await client.auth.signInWithPassword({ email, password });
+      if (err && /Email not confirmed/i.test(err.message)) {
+        try {
+          const res = await confirmApprovedUserEmail({ data: { email } });
+          if (res.confirmed) {
+            ({ error: err } = await client.auth.signInWithPassword({ email, password }));
+          }
+        } catch {
+          /* keep the original error */
+        }
+      }
       if (err) setError(translateError(err.message));
     }
     setBusy(false);
