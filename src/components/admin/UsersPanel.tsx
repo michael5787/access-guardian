@@ -236,7 +236,18 @@ function UserEditor({
   const [newPassword, setNewPassword] = useState("");
   const [pwBusy, setPwBusy] = useState(false);
   const [pwMsg, setPwMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [newEmail, setNewEmail] = useState(row.email);
+  const [emailBusy, setEmailBusy] = useState(false);
+  const [emailMsg, setEmailMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const updatePasswordFn = useServerFn(setUserPassword);
+  const updateEmailFn = useServerFn(setUserEmail);
+
+  const failText = (err: unknown, action: string) => {
+    const msg = err instanceof Error ? err.message : "";
+    if (/Forbidden/i.test(msg)) return `${action}: هذا الحساب لا يملك صلاحيات المشرف العام.`;
+    if (/Unauthorized/i.test(msg)) return `${action}: انتهت جلستك، أعد تسجيل الدخول.`;
+    return `${action}${msg ? ` (${msg})` : ""}.`;
+  };
 
   const updatePassword = async () => {
     if (newPassword.length < 6) return;
@@ -246,10 +257,24 @@ function UserEditor({
       await updatePasswordFn({ data: { userId: row.id, password: newPassword } });
       setNewPassword("");
       setPwMsg({ ok: true, text: "تم تحديث كلمة المرور." });
-    } catch {
-      setPwMsg({ ok: false, text: "تعذّر تحديث كلمة المرور. تأكد من صلاحيات المشرف العام." });
+    } catch (err) {
+      setPwMsg({ ok: false, text: failText(err, "تعذّر تحديث كلمة المرور") });
     }
     setPwBusy(false);
+  };
+
+  const updateEmail = async () => {
+    const value = newEmail.trim();
+    if (value === "" || value === row.email) return;
+    setEmailBusy(true);
+    setEmailMsg(null);
+    try {
+      await updateEmailFn({ data: { userId: row.id, email: value } });
+      setEmailMsg({ ok: true, text: "تم تحديث البريد الإلكتروني." });
+    } catch (err) {
+      setEmailMsg({ ok: false, text: failText(err, "تعذّر تحديث البريد الإلكتروني") });
+    }
+    setEmailBusy(false);
   };
 
 
