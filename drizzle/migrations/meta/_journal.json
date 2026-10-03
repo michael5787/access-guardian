@@ -22,6 +22,41 @@
       "when": 1788282663030,
       "tag": "0002_storage_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789754324633,
+      "tag": "0003_create_class_questions",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789754345990,
+      "tag": "0004_questions_storage_policies",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790626627655,
+      "tag": "0005_profiles_visible_within_class",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790924544304,
+      "tag": "0006_create_chapters",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791019070989,
+      "tag": "0007_profile_avatars",
+      "breakpoints": true
     }
   ]
 }
