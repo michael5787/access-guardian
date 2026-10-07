@@ -4,6 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { STATUS_LABEL } from "@/lib/spaces";
 import { AddGradeButton } from "@/components/grades/Grades";
+import { HomeworkStatusButton } from "@/components/grades/Homework";
 
 type ClassRow = Database["public"]["Tables"]["classes"]["Row"];
 
@@ -49,6 +50,7 @@ export function ClassStudents({
         .select("id, full_name, email, status, class_id")
         .eq("space", "talameed");
       if (!isAdmin) query = query.in("class_id", classIds);
+      if (selected) query = query.eq("class_id", selected);   
       const { data, error: err } = await query.order("full_name", {
         ascending: true,
         nullsFirst: false,
@@ -160,6 +162,7 @@ export function ClassStudents({
                       {STATUS_LABEL[s.status] ?? s.status}
                     </span>
                     <AddGradeButton client={client} teacherId={teacherId} studentId={s.id} classId={s.class_id} />
+                    <HomeworkStatusButton client={client} teacherId={teacherId} studentId={s.id} classId={s.class_id} />
                   </li>
                 ))}
               </ul>

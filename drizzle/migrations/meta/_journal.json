@@ -57,6 +57,20 @@
       "when": 1791019070989,
       "tag": "0007_profile_avatars",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791269505667,
+      "tag": "0008_homework_status",
+      "breakpoints": true
+    },
+     {
+      "idx": 9,
+      "version": "7",
+      "when": 1791351124835,
+      "tag": "0009_lesson_logs",
+      "breakpoints": true
     }
   ]
 }

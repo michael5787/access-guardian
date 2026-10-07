@@ -14,12 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      evaluation_grades: {
-        Row: { comment: string | null; created_at: string; evaluation_id: string; grade: number; id: string; student_id: string; teacher_id: string; updated_at: string }
-        Insert: { comment?: string | null; created_at?: string; evaluation_id: string; grade: number; id?: string; student_id: string; teacher_id: string; updated_at?: string }
-        Update: { comment?: string | null; created_at?: string; evaluation_id?: string; grade?: number; id?: string; student_id?: string; teacher_id?: string; updated_at?: string }
-        Relationships: []
-      }
       agenda_events: {
         Row: {
           class_id: string
@@ -146,6 +140,129 @@ export type Database = {
             columns: ["level_id"]
             isOneToOne: false
             referencedRelation: "levels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      evaluation_grades: {
+        Row: {
+          comment: string | null
+          created_at: string
+          evaluation_id: string
+          grade: number
+          id: string
+          student_id: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          evaluation_id: string
+          grade: number
+          id?: string
+          student_id: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          evaluation_id?: string
+          grade?: number
+          id?: string
+          student_id?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "evaluation_grades_evaluation_id_fkey"
+            columns: ["evaluation_id"]
+            isOneToOne: false
+            referencedRelation: "agenda_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      homework_status: {
+        Row: {
+          created_at: string
+          done: boolean
+          homework_id: string
+          id: string
+          student_id: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          done: boolean
+          homework_id: string
+          id?: string
+          student_id: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          done?: boolean
+          homework_id?: string
+          id?: string
+          student_id?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "homework_status_homework_id_fkey"
+            columns: ["homework_id"]
+            isOneToOne: false
+            referencedRelation: "agenda_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lesson_logs: {
+        Row: {
+          class_id: string
+          content: string
+          created_at: string
+          end_time: string
+          id: string
+          log_date: string
+          start_time: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_id: string
+          content: string
+          created_at?: string
+          end_time: string
+          id?: string
+          log_date: string
+          start_time: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Update: {
+          class_id?: string
+          content?: string
+          created_at?: string
+          end_time?: string
+          id?: string
+          log_date?: string
+          start_time?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_logs_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
             referencedColumns: ["id"]
           },
         ]

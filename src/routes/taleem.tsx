@@ -9,10 +9,12 @@ import { TeacherSubmissions } from "@/components/resources/TeacherSubmissions";
 import { TeacherAgenda } from "@/components/agenda/TeacherAgenda";
 import { QuestionsSpace } from "@/components/questions/QuestionsSpace";
 import { TeacherEvaluations } from "@/components/grades/Grades";
+import { TeacherHomeworks } from "@/components/grades/Homework";
 import { ClassStudents } from "@/components/students/ClassStudents";
 import { NotificationsPanel } from "@/components/NotificationsPanel";
 import { useNotifications } from "@/components/resources/useSubmissions";
 import { STATUS_LABEL } from "@/lib/spaces";
+import { useSpaceSection } from "@/hooks/useSpaceSection";
 
 export const Route = createFileRoute("/taleem")({
   ssr: false,
@@ -67,7 +69,7 @@ function TeacherShell({
   signOut: () => Promise<void>;
   isAdmin: boolean;
 }) {
-  const [tab, setTab] = useState<Tab>("resources");
+  const [tab, setTab] = useSpaceSection<Tab>("taleem", userId, "resources", ["resources", "agenda", "evaluations", "questions", "answers", "students", "notifications", "account"]);
   const [classes, setClasses] = useState<ClassRow[]>([]);
   const notifications = useNotifications(client, userId);
 
@@ -98,7 +100,7 @@ function TeacherShell({
 
   const tabs: { key: Tab; label: string; badge?: number }[] = [
     { key: "resources", label: "الدروس والتمارين" },
-    { key: "agenda", label: "المفكرة" },
+    { key: "agenda", label: "المذكرة" },
     { key: "evaluations", label: "التقييمات" },
     { key: "questions", label: "الأسئلة والأجوبة" },
     { key: "answers", label: "أجوبة التلاميذ" },
@@ -142,8 +144,11 @@ function TeacherShell({
           <TeacherResources client={client} teacherId={userId} />
         ) : tab === "agenda" ? (
           <TeacherAgenda client={client} teacherId={userId} classes={classes} />
-        ) : tab === "evaluations" ? (
-          <TeacherEvaluations client={client} classes={classes} />
+            ) : tab === "evaluations" ? (
+          <div className="space-y-6">
+            <TeacherEvaluations client={client} classes={classes} />
+            <TeacherHomeworks client={client} classes={classes} />
+          </div>
         ) : tab === "questions" ? (
           <QuestionsSpace
             client={client}
@@ -156,7 +161,7 @@ function TeacherShell({
         ) : tab === "answers" ? (
           <TeacherSubmissions client={client} teacherId={userId} classes={classes} />
         ) : tab === "students" ? (
-          <ClassStudents client={client} classes={classes} isAdmin={isAdmin} teacherId={userId} />
+         <ClassStudents client={client} classes={classes} isAdmin={isAdmin} teacherId={userId} />
         ) : tab === "notifications" ? (
           <NotificationsPanel
             rows={notifications.rows}
