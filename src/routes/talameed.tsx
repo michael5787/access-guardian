@@ -13,6 +13,7 @@ import { StudentHomeworks } from "@/components/grades/Homework";
 import { StudentAbsences } from "@/components/absences/Absences";
 import { StudentTour, useTourEligible, type TourStep } from "@/components/StudentTour";
 import { STATUS_LABEL } from "@/lib/spaces";
+import { TRIMESTER_OPTIONS } from "@/lib/trimesters";
 import { useSpaceSection } from "@/hooks/useSpaceSection";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
@@ -86,6 +87,7 @@ function StudentShell({
     { key: "account", title: "حسابي", text: "معلوماتك الشخصية، قسمك ومستواك، وزر تسجيل الخروج." },
   ];
 
+  const [gradesTrimester, setGradesTrimester] = useState("");
   const [className, setClassName] = useState<string | null>(null);
   const [levelName, setLevelName] = useState<string | null>(null);
   useEffect(() => {
@@ -164,8 +166,23 @@ function StudentShell({
           <StudentAgenda client={client} classId={classId} studentId={userId} />
             ) : tab === "grades" ? (
           <div className="space-y-6">
-            <StudentGrades client={client} classId={classId} studentId={userId} />
-            <StudentHomeworks client={client} classId={classId} studentId={userId} />
+            <div className="flex flex-wrap items-center gap-2">
+              <select
+                className="field-input w-auto min-w-40 text-sm"
+                value={gradesTrimester}
+                onChange={(e) => setGradesTrimester(e.target.value)}
+                aria-label="تصفية حسب الثلاثي"
+              >
+                <option value="">العام الدراسي</option>
+                {TRIMESTER_OPTIONS.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <StudentGrades client={client} classId={classId} studentId={userId} trimester={gradesTrimester} />
+            <StudentHomeworks client={client} classId={classId} studentId={userId} trimester={gradesTrimester} />
           </div>
         ) : tab === "absences" ? (
           <div className="space-y-6">
