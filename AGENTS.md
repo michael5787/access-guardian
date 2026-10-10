@@ -11,3 +11,4 @@
 
 - Persist space sections through the shared useSpaceSection hook, scoped by account and space in sessionStorage, so reloads restore navigation without mixing accounts or browser tabs.
 - Load SpaceAuth profiles by user identity rather than session-object changes, so token refreshes do not unmount active views.
+- Generate grade-report PDFs client-side from the displayed grade-sheet rows, using browser-shaped Arabic and measured row pagination so exports match the current selection and never split a student row.
