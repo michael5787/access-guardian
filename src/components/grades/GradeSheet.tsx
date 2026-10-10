@@ -85,8 +85,8 @@ export function GradeSheet({ client, classes, teacherId, teacherName }: { client
       const evIds = (ev ?? []).filter((e) => e.kind === "evaluation").map((e) => e.id);
       const hwIds = (ev ?? []).filter((e) => e.kind === "homework").map((e) => e.id);
       const [g, h, b] = await Promise.all([
-        evIds.length ? client.from("evaluation_grades").select("evaluation_id, student_id, grade").in("evaluation_id", evIds) : Promise.resolve({ data: [] }),
-        hwIds.length ? client.from("homework_status").select("homework_id, student_id, done").in("homework_id", hwIds) : Promise.resolve({ data: [] }),
+        evIds.length ? client.from("evaluation_grades").select("evaluation_id, student_id, grade").in("evaluation_id", evIds) : Promise.resolve({ data: [], error: null }),
+        hwIds.length ? client.from("homework_status").select("homework_id, student_id, done").in("homework_id", hwIds) : Promise.resolve({ data: [], error: null }),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (client as any).from("behavior_grades").select("student_id, grade, created_at").eq("class_id", classId).order("created_at", { ascending: false }),
       ]);
